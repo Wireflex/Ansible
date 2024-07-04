@@ -1,0 +1,10 @@
+[PROD]
+linux1 ansible_host=94.142.141.77 ansible_user=root
+
+[STAGING]
+linux2 ansible_host=94.142.142.172 ansible_user=root
+
+
+[ALL_LINUX:children]
+PROD
+STAGING
