@@ -79,7 +79,7 @@ inventory         = ./hosts
 host_key_checking = False   # чтоб fingerprint не тыкать
 ```
 
-А для переменных( ключей/паролей итд) лучше создать отдельную директорию group_vars, и в неё закинуть переменные для stage_group и prod_group
+А для переменных( ключей/паролей итд) лучше создать отдельную директорию group_vars, и в неё закинуть переменные (к примеру, для stage_group и prod_group )
 
 <details> <summary>/group_vars/stage_group</summary>
 
