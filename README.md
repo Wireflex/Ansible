@@ -17,15 +17,32 @@ sudo apt install ansible
 ```
 </details>
 
-## hosts
-список хостов, которыми можно управлять через Ansible, их можно группировать(stage,prod итд)
+## hosts/inventory
+список хостов, которыми можно управлять через Ansible, их можно по-всякому группировать
 
 ```
 [stage]
-linux1 ansible_host=18.199.164.53 ansible_user=ubuntu ansible_ssh_private_key_file=/home/wireflex/.ssh/wireflex-key-frankfurt.pem
+linux1 ansible_host=18.199.164.53
+
 [prod]
-linux2 ansible_host=192.168.0.70 ansible_user=wireflex ansible_ssh_pass=dota228
+linux2 ansible_host=192.168.0.70
+
+[total]
+stage
+prod
+
+[stage:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/wireflex/.ssh/wireflex-key-frankfurt.pem
+
+[prod:vars]
+ansible_user=wireflex
+ansible_ssh_pass=dota228
+
 ```
+
+```ansible-inventory --list```
+
 Здесь linux1 сервер поднят в AWS, приатачен приватный ключ 'wireflex-key-frankfurt.pem', поэтому без пароля, ssh-copy-id, обменом публичных ключей итд
 
 В случае с linux2 нужно ввести пароль
@@ -39,6 +56,12 @@ Ad-hoc команды - это возможность запустить как�
 ```ansible -i hosts linux1 -m ping``` -i (инвентарь, у нас это hosts), linux1 (конкретный сервер, можно было выбрать все серверы 'all', или к примеру, группу prod), -m (модуль, по сути в ансибл всё модули, тут просто проверка ping-pong)
 
 ![image](https://github.com/user-attachments/assets/a113f618-4402-4f8f-a9f8-fc58efebdbfb)
+
+[Все модули](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html)
+
+[Самые важные-1](https://habr.com/ru/companies/slurm/articles/707130/)
+
+[Самые важные-2](https://habr.com/ru/companies/slurm/articles/707986/)
 
 ## ansible.cfg
 
@@ -71,5 +94,19 @@ host_key_checking = False
 
 ![image](https://github.com/user-attachments/assets/cfaee11c-b562-48c4-bc88-bd2caf237f85)
 
+ansible all -m shell -a "uptime" ( -a аргумент, вместо 'shell' можно юзать 'command', но там не работают переменные,>,<,| итд)
 
+![image](https://github.com/user-attachments/assets/9eb9b82e-fedd-4d03-9d2c-7d3f0a2bdf64)
+
+Можно создать файл 'hello' и передать на сервы ```ansible all -m copy -a "src=hello dest=/home/ mode=0777" -b``` -b это sudo
+
+и затем удалить его ```ansible all -m file -a "path/home/hello state=absent" -b```
+
+скачать что-то из инета ```ansible all -m get_url -a "url=https://dota3.ru dest=/home" -b```
+
+проверить подключение ```ansible all -m uri -a "url=http://www.dota3.ru"``` и вывести его, дописать ```return_content=yes"```
+
+установить ```ansible all -m apt -a "name=apache2 state=present" -b```
+
+включить и добавить а автозагрузку```ansible all -m service -a "name=apache2 state=started enabled=yes" -b```
 
