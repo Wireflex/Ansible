@@ -72,3 +72,69 @@ playbookindex.yml
   - name: Restart Apache
     service: name=apache2 state=restarted
 ```
+## Debug
+используется для вывода отладочной информации во время выполнения плейбуков. Он позволяет выводить переменные, выражения и другую информацию, которая может быть полезна для отладки и проверки работы вашего плейбука
+## Set_fact
+позволяет устанавливать новые переменные или изменять значения существующих переменных в рамках выполнения плейбука
+## Register
+используется для сохранения результатов выполнения задачи в переменную, которая может быть использована в последующих задачах или условиях
+
+```ansible linux1 -m setup``` содержит огромное кол-во переменных ( ansible_os_family,ipv4,ipv6 и еще миллион всего )
+
+их так же можно задавать через debug, но уже без {{ }}
+
+в hosts дописал переменную owner=Wireflex
+
+```
+---
+- name: Variables
+  hosts: all
+  become: yes
+
+
+  vars:
+    message1: Privet
+    message2: World
+    secret  : kiojfisd3oj
+
+  tasks:
+
+  - name: Print Secret variables
+    debug:
+      var: secret
+
+  - debug:
+      msg: "Sekretnoe slovo: {{ secret }}"
+
+  - debug:
+      msg: "Vladelec etogo servera -->{{ owner }}<--"
+
+  - set_fact: full_message="{{ message1}} {{ message2 }} from {{ owner }}"
+
+  - debug:
+      var: full_message
+
+  - debug:
+      var: ansible_distribution
+
+  - shell: uptime
+    register: results
+
+  - debug:
+      var: results
+
+```
+![image](https://github.com/user-attachments/assets/76b26335-00c8-4cc0-a817-09fbf84145c4)
+
+можно посмотреть на Json и взять оттуда любую переменную ( stdout, например, который только время,дни,юзеров и LA показывает ), дописать 
+```
+  - debug:
+      var: results.stdout
+```
+![image](https://github.com/user-attachments/assets/d476e663-6de9-495d-b83d-02f0411bce06)
+
+
+
+
+
+
