@@ -116,7 +116,7 @@ ansible_ssh_pass: dota228
 
 скачать что-то из инета ```ansible all -m get_url -a "url=https://dota3.ru dest=/home" -b```
 
-проверить подключение ```ansible all -m uri -a "url=http://www.dota3.ru"``` и вывести его, дописать ```return_content=yes"```
+проверить подключение ```ansible all -m uri -a "url=https://www.dota3.ru"``` и вывести его, дописав ```return_content=yes"```
 
 установить ```ansible all -m apt -a "name=apache2 state=present" -b```
 
