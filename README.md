@@ -27,6 +27,10 @@ linux1 ansible_host=18.199.164.53
 [prod_group]
 linux2 ansible_host=192.168.0.70
 
+[all_linux:children]
+stage_group
+prod_group
+
 ```
 
 ```ansible-inventory --list```
