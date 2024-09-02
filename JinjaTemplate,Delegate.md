@@ -78,3 +78,36 @@ playbook.yml, не забываем при переносе поменять н�
     service: name=httpd state=restarted
     when: ansible_os_family == "Redhat"
 ```
+# Delegate to
+C помощью delegate_to можно заставить task выполняться на указанном сервере в обход заданных в начале .yml файла hosts. Delegate_to имеет приоритет над hosts
+
+```
+---
+- name: lol
+  hosts: all
+  become: yes
+
+  vars:
+    mytext: "Hello epta"
+
+  tasks:
+
+  - name: info to my server
+    shell: echo {{ inventory_hostname }} node name is {{ ansible_nodename }} >> /home/log.txt
+    delegate_to: 127.0.0.1
+
+  - name: create file1
+    copy:
+      dest: /home/file1.txt
+      content: |
+        suka {{ mytext }}
+    delegate_to: 127.0.0.1
+
+  - name: create file2
+    copy:
+      dest: /home/file2.txt
+      content: |
+        kurwa {{ mytext }}
+```
+То есть команда выполнится на ремоут-сервере, но результат делегируется на локалхост
+![image](https://github.com/user-attachments/assets/cae1a0f1-41d5-4fcc-87ff-180e0e7cf23d)
