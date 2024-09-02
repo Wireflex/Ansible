@@ -71,3 +71,39 @@
   - import_tasks: create_files.yml
 ```
 </details>
+
+# Errors
+```ignore_errors: yes``` позволяет игнорировать ошибку и продолжать выполнение плейбука
+
+```failed_when:``` наоборот будет выдавать ошибку, если было соблюдено условие ( мы печатаем hello World, а он ищет World в выводе results как раз )
+
+закомменченный return code == 0 так же выдаст ошибку, когда команда выполнится успешно О_о
+
+```any_errors_fatal: true``` сразу закончит плейбук, если будет ошибка, однако ```ignore_errors: yes``` имеет приоритет, и остальные таски всё равно продолжат выполняться
+```
+---
+- name: dota
+  hosts: all
+  any_errors_fatal: true
+  become: yes
+
+  tasks:
+    - name: Install package (treeee)
+      apt:
+        name: treeee
+        state: latest
+      ignore_errors: yes
+
+    - name: Execute shell command
+      shell: echo Hello World
+      register: results
+#      failed_when: results.rc == 0
+      failed_when: "'World' in results.stdout"
+
+    - debug:
+        var: results
+
+    - name: Execute another shell command
+      shell: echo Privet
+
+```
