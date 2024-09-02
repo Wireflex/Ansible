@@ -122,7 +122,7 @@ ansible_ssh_pass: dota228
 
 проверить подключение ```ansible all -m uri -a "url=https://www.dota3.ru"``` и вывести его, дописав ```return_content=yes"```
 
-установить ```ansible all -m apt -a "name=apache2 state=present" -b```
+установить ```ansible all -m apt -a "name=apache2 state=present" -b``` - ```state=absent``` удаляет
 
 включить и добавить а автозагрузку```ansible all -m service -a "name=apache2 state=started enabled=yes" -b```
 
