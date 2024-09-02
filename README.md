@@ -127,3 +127,36 @@ ansible_ssh_pass: dota228
 включить и добавить а автозагрузку```ansible all -m service -a "name=apache2 state=started enabled=yes" -b```
 
 инфа о файле ```ansible all -m shell -a "ls /var" -v``` чем больше -vvvv, чем больше инфы
+
+---
+
+<details> <summary>hosts</summary>
+
+```
+[stage_group]
+linux1 ansible_host=18.199.164.53 owner=Wireflex
+
+#[prod_group]
+#linux2 ansible_host=192.168.0.70
+
+[all_linux:children]
+stage_group
+#prod_group
+```
+</details>
+
+можно задать внешние переменные ```ansible-playbook playbookrole.yml --extra-var "MYHOSTS=stage_group"``` extra-var переопределит переменные в файлах 
+
+<details> <summary>playbook.yml</summary>
+
+```
+---
+- name: Install Apache and Upload Web Page
+  hosts: "{{ MYHOSTS }}"
+  become: yes
+
+  roles:
+    - { role: deploy_apache_web, when: ansible_system == 'Linux' }
+```
+</details>
+
