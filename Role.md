@@ -84,15 +84,15 @@
 ```
 </details>
 
-распределить по файлам в директориях роли, а в самом плейбуке оставить только hosts и сами роли
+распределить по файлам в директориях роли, а в самом плейбуке оставить только hosts и название ролей
 
 3 картинки из ```MyWebSite2/``` просто переносим в ```roles/deploy_apache_web/files/```
 
 Сгенерированный шаблон index.j2 в ```roles/deploy_apache_web/templates/```
 
-Переменная ```source_folder: ./MyWebSite2```больше не нужна,т.к ансибл знает откуда брать пикчи, а переменную ```destin_folder: /var/www/html``` переносим либо в vars, либо в
+Переменная ```source_folder: ./MyWebSite2```больше не нужна,т.к ансибл знает откуда брать пикчи, а переменную ```destin_folder: /var/www/html``` переносим либо в ```roles/deploy_apache_web/vars```, либо в
 
-<details> <summary>defaults/main.yml</summary>
+<details> <summary>roles/deploy_apache_web/defaults/main.yml</summary>
 
 ```
 ---
@@ -102,7 +102,9 @@ destin_folder: /var/www/html
 ```
 </details>
 
-<details> <summary>handlers/main.yml</summary>
+2 хендлера из конца файла в 
+
+<details> <summary>roles/deploy_apache_web/handlers/main.yml</summary>
 
 ```
 ---
@@ -118,7 +120,53 @@ destin_folder: /var/www/html
 ```
 </details>
 
-новый playbook.yml, можно сразу несколько ролей ( неактуальные можно комментить, а потом раскомменчивать, когда нужно юзать )
+и tasks: в
+
+<details> <summary>roles/deploy_apache_web/tasks/main.yml</summary>
+
+```
+---
+# tasks file for deploy_apache_web
+
+- block:  #=========Block for Debian=======#
+
+  - name: Install Apache for Debian
+    apt: name=apache2 state=latest
+
+  - name: Start WebServer and enable for Debian
+    service: name=apache2 state=started enabled=yes
+
+  when: ansible_os_family == "Debian"
+
+- block: #==========Block for Redhat=======#
+
+  - name: Install Apache for Redhat
+    yum: name=httpd state=latest
+
+  - name: Start WebServer and enable for Redhat
+    service: name=httpd state=started enabled=yes
+
+  when: ansible_os_family == "Redhat"
+
+- name: Generate J2
+  template: src=index.j2 dest={{ destin_folder }}/index.html mode=0555
+  notify:
+      - Restart Apache Debian
+      - Restart Apache Redhat
+
+- name: Copy Web Page to servers Debian
+  copy: src={{ item }} dest={{ destin_folder }} mode=0555
+  loop:
+      - "dota.png"
+      - "dota2.png"
+      - "dota3.png"
+  notify:
+      - Restart Apache Debian
+      - Restart Apache Redhat
+```
+</details>
+
+новый playbook.yml
 ```
 ---
 - name: Install Apache and Upload Web Page
@@ -129,3 +177,4 @@ destin_folder: /var/www/html
     - { role: deploy_apache_web, when: ansible_system == 'Linux' }
 #    - deploy_db
 ```
+можно юзать сразу несколько ролей ( неактуальные можно комментить, а потом раскомменчивать, когда нужно юзать )
