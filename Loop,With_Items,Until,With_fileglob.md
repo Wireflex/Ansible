@@ -100,3 +100,6 @@ Loop и with_items - тож самое
     copy: src={{ item }} dest={{ destin_folder }} mode=0555
     with_fileglob: "{{ source_folder }}/*.*"
 ```
+---
+
+![image](https://github.com/user-attachments/assets/f8a62e32-cf52-44e0-9f0e-9818b646a45a)
