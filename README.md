@@ -43,18 +43,6 @@ prod_group
 
 ---
 
-Ad-hoc команды - это возможность запустить какое-то действие Ansible из командной строки
-
-```ansible -i hosts linux1 -m ping``` -i (инвентарь, у нас это hosts), linux1 (конкретный сервер, можно было выбрать все серверы 'all', или к примеру, группу prod_group), -m (модуль, по сути в ансибл всё модули, тут просто проверка ping-pong)
-
-![image](https://github.com/user-attachments/assets/a113f618-4402-4f8f-a9f8-fc58efebdbfb)
-
-[Все модули](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html) либо "ansible (apt)" в инете
-
-[Самые важные-1](https://habr.com/ru/companies/slurm/articles/707130/)
-
-[Самые важные-2](https://habr.com/ru/companies/slurm/articles/707986/)
-
 ## ansible.cfg
 
 файл конфигурации Ansible, позволяет настроить различные аспекты работы Ansible
@@ -83,6 +71,8 @@ inventory         = ./hosts
 host_key_checking = False   # чтоб fingerprint не тыкать
 ```
 
+## group_vars
+
 А для переменных( ключей/паролей итд) лучше создать отдельную директорию group_vars, и в неё закинуть переменные (к примеру, для stage_group и prod_group )
 
 <details> <summary>/group_vars/stage_group</summary>
@@ -101,49 +91,12 @@ ansible_ssh_private_key_file: /home/wireflex/.ssh/wireflex-key-frankfurt.pem
 ---
 ansible_user:     wireflex
 ansible_ssh_pass: dota228
+ansible_become_pass: dota)
 ```
 </details>
-
-Теперь команда выглядит так ```ansible all -m ping```
-
-![image](https://github.com/user-attachments/assets/cfaee11c-b562-48c4-bc88-bd2caf237f85)
-
-```ansible all -m shell -a "uptime"``` ( -a аргумент, вместо 'shell' можно юзать 'command', но там не работают переменные,>,<,| итд)
-
-![image](https://github.com/user-attachments/assets/9eb9b82e-fedd-4d03-9d2c-7d3f0a2bdf64)
-
-```ansible linux1 -m setup``` инфа о серве
-
-Можно создать файл 'hello' и передать на сервы ```ansible all -m copy -a "src=hello dest=/home/ mode=0777" -b``` -b это sudo
-
-и затем удалить его ```ansible all -m file -a "path=/home/hello state=absent" -b```
-
-скачать что-то из инета ```ansible all -m get_url -a "url=https://dota3.ru dest=/home" -b```
-
-проверить подключение ```ansible all -m uri -a "url=https://www.dota3.ru"``` и вывести его, дописав ```return_content=yes"```
-
-установить ```ansible all -m apt -a "name=apache2 state=present" -b``` - ```state=absent``` удаляет
-
-включить и добавить а автозагрузку```ansible all -m service -a "name=apache2 state=started enabled=yes" -b```
-
-инфа о файле ```ansible all -m shell -a "ls /var" -v``` чем больше -vvvv, чем больше инфы
 
 ---
 
-<details> <summary>hosts</summary>
-
-```
-[stage_group]
-linux1 ansible_host=18.199.164.53 owner=Wireflex
-
-#[prod_group]
-#linux2 ansible_host=192.168.0.70
-
-[all_linux:children]
-stage_group
-#prod_group
-```
-</details>
 
 можно задать внешние переменные ```ansible-playbook playbookrole.yml --extra-var "MYHOSTS=stage_group"``` extra-var переопределит переменные в файлах 
 
