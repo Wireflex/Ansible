@@ -91,7 +91,8 @@ ansible_ssh_private_key_file: /home/wireflex/.ssh/wireflex-key-frankfurt.pem
 ---
 ansible_user:     wireflex
 ansible_ssh_pass: dota228
-ansible_become_pass: dota)
+ansible_become_pass: dota   # либо у юзера вообще убрать пароль в visudo (%sudo   ALL=(ALL:ALL) ALL
+                                                                        # wireflex ALL=(ALL:ALL) NOPASSWD:ALL)
 ```
 </details>
 
