@@ -5,12 +5,6 @@
 
 ![image](https://github.com/user-attachments/assets/a113f618-4402-4f8f-a9f8-fc58efebdbfb)
 
-[Все модули](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html) либо "ansible (apt)" в инете
-
-[Самые важные-1](https://habr.com/ru/companies/slurm/articles/707130/)
-
-[Самые важные-2](https://habr.com/ru/companies/slurm/articles/707986/)
-
 После указания hosts в ansible.cfg команда выглядит так ```ansible all -m ping```
 
 ![image](https://github.com/user-attachments/assets/cfaee11c-b562-48c4-bc88-bd2caf237f85)
