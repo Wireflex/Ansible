@@ -96,6 +96,10 @@ ansible_become_pass: dota   # либо у юзера вообще убрать �
 ```
 </details>
 
+---
+
+## Модули
+
 [Все модули](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html) либо "ansible (apt)" в инете
 
 [Самые важные-1](https://habr.com/ru/companies/slurm/articles/707130/)
