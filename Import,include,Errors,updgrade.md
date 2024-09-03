@@ -107,3 +107,15 @@
       shell: echo Privet
 
 ```
+
+## Update + upgrade
+
+```
+  - name: update
+    apt:
+      update_cache: yes
+
+  - name: upgrade
+    apt:
+      upgrade: yes
+```
