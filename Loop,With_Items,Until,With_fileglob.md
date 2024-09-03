@@ -102,4 +102,5 @@ Loop и with_items - тож самое
 ```
 ---
 
-![image](https://github.com/user-attachments/assets/f8a62e32-cf52-44e0-9f0e-9818b646a45a)
+![image](https://github.com/user-attachments/assets/eef680ef-028c-4758-a16c-25bae2f599a5)
+
