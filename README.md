@@ -96,8 +96,13 @@ ansible_become_pass: dota   # либо у юзера вообще убрать �
 ```
 </details>
 
----
+[Все модули](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html) либо "ansible (apt)" в инете
 
+[Самые важные-1](https://habr.com/ru/companies/slurm/articles/707130/)
+
+[Самые важные-2](https://habr.com/ru/companies/slurm/articles/707986/)
+
+---
 
 можно задать внешние переменные ```ansible-playbook playbookrole.yml --extra-var "MYHOSTS=stage_group"``` extra-var переопределит переменные в файлах 
 
