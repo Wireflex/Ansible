@@ -16,7 +16,7 @@ playbookping.yml
     ping:                 # -m ping
 ```
 
-Выполняем ```ansible-playbook playbookping.yml```
+Выполняем ```ansible-playbook playbookping.yml``` ( hosts можно переопределить в консоли ```ansible-playbook playbookping.yml -l linux1 ```
 
 ![image](https://github.com/user-attachments/assets/e2147baa-a8ae-472a-8201-91e139bd98fb)
 
