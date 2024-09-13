@@ -41,6 +41,64 @@ prod_group
 
 Либо же заранее установить ssh-соединение с сервером каким-либо образом ( пароль, ключ )
 
+## Dynamic Inventory
+
+нужен в том случае, когда инстансов дофига,и они постоянно меняются, ну и в целом удобная штука, суть - добавлять tags или prefix инстам, группировать их по этим же tags или prefix, и потом запускать плейбуки с хостами этих tags/prefix
+
+создаём инвентарь
+<details> <summary>aws_ec2.yml</summary>
+
+```
+plugin: aws_ec2
+aws_profile: default
+regions:
+  - eu-central-1
+
+hostnames:
+  - ip-address    # тут чтобы по публичным айпи фильтровал, по дефолту по приватным будет( можно по домену кста делать )
+
+#keyed_groups:
+ # - prefix: arch       # можно группировать по префиксам
+  #  key: architecture
+  #- prefix: az
+   # key: placement.availability_zone
+groups:                           # либо по tags
+  ubuntu: "'ubuntu' in tags.OS"   # на всех инстах,с которыми хотим взаимодействовать установлен tag "OS=ubuntu"
+                                  # очевидно, можно группировать как угодно
+```
+</details>
+
+![image](https://github.com/user-attachments/assets/1306d3e2-5cac-483b-ab9a-498abd32d9ae)
+
+далее создаём груп варс для убунту, если бы были redhat инсты - создали бы для них +- тож самое
+
+<details> <summary>group_vars/ubuntu.yml</summary>
+
+```
+ansible_ssh_private_key_file: wireflex-key-frankfurt.pem  # в директории лежит приватный ключ инста chmod 600
+ansible_ssh_user: ubuntu                                  # подняты убунту сервы, у redhat, к примеру, тут будет ec2-user
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'    # фингерпринт отключаем
+```
+</details>
+
+ну и сам плейбук для теста
+
+<details> <summary>pingplaybook.yml</summary>
+
+```
+- name: ping
+  hosts: ubuntu
+
+  tasks:
+    - name: ping
+      ping:
+```
+</details>
+
+создал 2 новых серва, и сразу же запуск плейбука
+
+![image](https://github.com/user-attachments/assets/8c4dd98b-de1b-41ba-b114-bf4fa7c43edb)
+
 ---
 
 ## ansible.cfg
